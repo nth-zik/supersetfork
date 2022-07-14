@@ -17,27 +17,32 @@
  * under the License.
  */
 import React from 'react';
-import { t } from '@superset-ui/core';
+import { FeatureFlag, isFeatureEnabled, t } from '@superset-ui/core';
 import {
   ControlPanelConfig,
   ControlPanelsContainerProps,
   D3_TIME_FORMAT_DOCS,
-  getStandardizedControls,
+  emitFilterControl,
   sections,
   sharedControls,
 } from '@superset-ui/chart-controls';
 
-import { EchartsTimeseriesSeriesType } from '../types';
-import { DEFAULT_FORM_DATA } from '../constants';
+import {
+  DEFAULT_FORM_DATA,
+  EchartsTimeseriesContributionType,
+  EchartsTimeseriesSeriesType,
+} from '../types';
 import {
   legendSection,
   onlyTotalControl,
   showValueControl,
   richTooltipSection,
+  xAxisControl,
 } from '../../controls';
 import { AreaChartExtraControlsOptions } from '../../constants';
 
 const {
+  contributionMode,
   logAxis,
   markerEnabled,
   markerSize,
@@ -53,7 +58,38 @@ const {
 const config: ControlPanelConfig = {
   controlPanelSections: [
     sections.legacyTimeseriesTime,
-    sections.echartsTimeSeriesQuery,
+    {
+      label: t('Query'),
+      expanded: true,
+      controlSetRows: [
+        isFeatureEnabled(FeatureFlag.GENERIC_CHART_AXES) ? [xAxisControl] : [],
+        ['metrics'],
+        ['groupby'],
+        [
+          {
+            name: 'contributionMode',
+            config: {
+              type: 'SelectControl',
+              label: t('Contribution Mode'),
+              default: contributionMode,
+              choices: [
+                [null, 'None'],
+                [EchartsTimeseriesContributionType.Row, 'Row'],
+                [EchartsTimeseriesContributionType.Column, 'Series'],
+              ],
+              description: t('Calculate contribution per series or row'),
+            },
+          },
+        ],
+        ['adhoc_filters'],
+        emitFilterControl,
+        ['limit'],
+        ['timeseries_limit_metric'],
+        ['order_desc'],
+        ['row_limit'],
+        ['truncate_metric'],
+      ],
+    },
     sections.advancedAnalyticsControls,
     sections.annotationsAndLayersControls,
     sections.forecastIntervalControls,
@@ -277,10 +313,10 @@ const config: ControlPanelConfig = {
       default: rowLimit,
     },
   },
-  formDataOverrides: formData => ({
+  denormalizeFormData: formData => ({
     ...formData,
-    metrics: getStandardizedControls().popAllMetrics(),
-    groupby: getStandardizedControls().popAllColumns(),
+    metrics: formData.standardizedFormData.standardizedState.metrics,
+    groupby: formData.standardizedFormData.standardizedState.columns,
   }),
 };
 

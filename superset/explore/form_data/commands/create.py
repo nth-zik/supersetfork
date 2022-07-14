@@ -27,7 +27,6 @@ from superset.extensions import cache_manager
 from superset.key_value.utils import get_owner, random_key
 from superset.temporary_cache.commands.exceptions import TemporaryCacheCreateFailedError
 from superset.temporary_cache.utils import cache_key
-from superset.utils.core import DatasourceType
 from superset.utils.schema import validate_json
 
 logger = logging.getLogger(__name__)
@@ -57,7 +56,7 @@ class CreateFormDataCommand(BaseCommand):
                 state: TemporaryExploreState = {
                     "owner": get_owner(actor),
                     "datasource_id": datasource_id,
-                    "datasource_type": DatasourceType(datasource_type),
+                    "datasource_type": datasource_type,
                     "chart_id": chart_id,
                     "form_data": form_data,
                 }

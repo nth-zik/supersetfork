@@ -29,18 +29,16 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from superset import db, event_logger
 from superset.commands.utils import populate_owners
-from superset.connectors.sqla.models import SqlaTable
+from superset.connectors.connector_registry import ConnectorRegistry
 from superset.connectors.sqla.utils import get_physical_table_metadata
 from superset.datasets.commands.exceptions import (
     DatasetForbiddenError,
     DatasetNotFoundError,
 )
-from superset.datasource.dao import DatasourceDAO
 from superset.exceptions import SupersetException, SupersetSecurityException
 from superset.extensions import security_manager
 from superset.models.core import Database
 from superset.superset_typing import FlaskResponse
-from superset.utils.core import DatasourceType
 from superset.views.base import (
     api,
     BaseSupersetView,
@@ -76,8 +74,8 @@ class Datasource(BaseSupersetView):
         datasource_id = datasource_dict.get("id")
         datasource_type = datasource_dict.get("type")
         database_id = datasource_dict["database"].get("id")
-        orm_datasource = DatasourceDAO.get_datasource(
-            db.session, DatasourceType(datasource_type), datasource_id
+        orm_datasource = ConnectorRegistry.get_datasource(
+            datasource_type, datasource_id, db.session
         )
         orm_datasource.database_id = database_id
 
@@ -119,8 +117,8 @@ class Datasource(BaseSupersetView):
     @api
     @handle_api_exception
     def get(self, datasource_type: str, datasource_id: int) -> FlaskResponse:
-        datasource = DatasourceDAO.get_datasource(
-            db.session, DatasourceType(datasource_type), datasource_id
+        datasource = ConnectorRegistry.get_datasource(
+            datasource_type, datasource_id, db.session
         )
         return self.json_response(sanitize_datasource_data(datasource.data))
 
@@ -132,10 +130,8 @@ class Datasource(BaseSupersetView):
         self, datasource_type: str, datasource_id: int
     ) -> FlaskResponse:
         """Gets column info from the source system"""
-        datasource = DatasourceDAO.get_datasource(
-            db.session,
-            DatasourceType(datasource_type),
-            datasource_id,
+        datasource = ConnectorRegistry.get_datasource(
+            datasource_type, datasource_id, db.session
         )
         try:
             external_metadata = datasource.external_metadata()
@@ -157,8 +153,9 @@ class Datasource(BaseSupersetView):
         except ValidationError as err:
             return json_error_response(str(err), status=400)
 
-        datasource = SqlaTable.get_datasource_by_name(
+        datasource = ConnectorRegistry.get_datasource_by_name(
             session=db.session,
+            datasource_type=params["datasource_type"],
             database_name=params["database_name"],
             schema=params["schema_name"],
             datasource_name=params["table_name"],

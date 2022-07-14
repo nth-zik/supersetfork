@@ -28,13 +28,11 @@ import {
   css,
   SupersetTheme,
   SupersetClient,
-  getExtensionsRegistry,
 } from '@superset-ui/core';
 import { MainNav as Menu } from 'src/components/Menu';
 import { Tooltip } from 'src/components/Tooltip';
 import Icons from 'src/components/Icons';
-import { findPermission } from 'src/utils/findPermission';
-import { isUserAdmin } from 'src/dashboard/util/permissionUtils';
+import findPermission, { isUserAdmin } from 'src/dashboard/util/findPermission';
 import { UserWithPermissionsAndRoles } from 'src/types/bootstrapTypes';
 import { RootState } from 'src/dashboard/types';
 import LanguagePicker from './LanguagePicker';
@@ -46,8 +44,6 @@ import {
   RightMenuProps,
 } from './types';
 import { MenuObjectProps } from './Menu';
-
-const extensionsRegistry = getExtensionsRegistry();
 
 const versionInfoStyles = (theme: SupersetTheme) => css`
   padding: ${theme.gridUnit * 1.5}px ${theme.gridUnit * 4}px
@@ -258,7 +254,6 @@ const RightMenu = ({
     }
     return null;
   };
-  const RightMenuExtension = extensionsRegistry.get('navbar.right');
 
   const handleDatabaseAdd = () => setQuery({ databaseAdded: true });
 
@@ -278,7 +273,6 @@ const RightMenu = ({
         onClick={handleMenuSelection}
         onOpenChange={onMenuOpen}
       >
-        {RightMenuExtension && <RightMenuExtension />}
         {!navbarRight.user_is_anonymous && showActionDropdown && (
           <SubMenu
             data-test="new-dropdown"

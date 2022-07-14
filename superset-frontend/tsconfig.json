@@ -6,6 +6,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
+    "resolveJsonModule": true,
 
     /* Modules */
     "baseUrl": ".",
@@ -32,11 +33,10 @@
       "@testing-library/jest-dom",
       "@types/node"
     ],
-
     /* Emit */
     "declaration": true,
     "declarationMap": true,
-    "importHelpers": false,
+    "importHelpers": true,
     "noEmitOnError": true,
     "outDir": "./dist",
     "sourceMap": true,
@@ -46,7 +46,7 @@
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
     /* Backwards Compatibility */
@@ -63,10 +63,9 @@
     /* Completeness */
     "skipLibCheck": true
   },
-  "exclude": [
-    "./packages/generator-superset/test/**/*"
-  ],
+  "exclude": ["./packages/generator-superset/test/**/*"],
   "include": [
+    "./src/types/*",
     "./src/**/*",
     "./spec/**/*",
     "./packages/*/src/**/*",
@@ -74,6 +73,8 @@
     "./plugins/*/src/**/*",
     "./plugins/*/types/**/*",
     "./packages/*/test/**/*",
-    "./plugins/*/test/**/*"
+    "./plugins/*/test/**/*",
+    "**/*.ts",
+    "**/*.d.ts"
   ]
 }

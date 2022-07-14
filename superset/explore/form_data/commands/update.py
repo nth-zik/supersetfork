@@ -32,7 +32,6 @@ from superset.temporary_cache.commands.exceptions import (
     TemporaryCacheUpdateFailedError,
 )
 from superset.temporary_cache.utils import cache_key
-from superset.utils.core import DatasourceType
 from superset.utils.schema import validate_json
 
 logger = logging.getLogger(__name__)
@@ -76,7 +75,7 @@ class UpdateFormDataCommand(BaseCommand, ABC):
                 new_state: TemporaryExploreState = {
                     "owner": owner,
                     "datasource_id": datasource_id,
-                    "datasource_type": DatasourceType(datasource_type),
+                    "datasource_type": datasource_type,
                     "chart_id": chart_id,
                     "form_data": form_data,
                 }

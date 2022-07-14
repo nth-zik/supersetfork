@@ -35,6 +35,7 @@ import {
   EchartsFunnelLabelTypeType,
   FunnelChartTransformedProps,
 } from './types';
+import { DEFAULT_LEGEND_FORM_DATA } from '../types';
 import {
   extractGroupbyLabel,
   getChartPadding,
@@ -42,7 +43,7 @@ import {
   sanitizeHtml,
 } from '../utils/series';
 import { defaultGrid, defaultTooltip } from '../defaults';
-import { OpacityEnum, DEFAULT_LEGEND_FORM_DATA } from '../constants';
+import { OpacityEnum } from '../constants';
 
 const percentFormatter = getNumberFormatter(NumberFormats.PERCENT_2_POINT);
 

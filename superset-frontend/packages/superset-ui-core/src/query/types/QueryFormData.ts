@@ -220,4 +220,8 @@ export function isDruidFormData(
   return 'granularity' in formData;
 }
 
+export function isSavedMetric(metric: QueryFormMetric): metric is SavedMetric {
+  return typeof metric === 'string';
+}
+
 export default {};

@@ -36,7 +36,7 @@ import {
   EchartsRadarLabelType,
   RadarChartTransformedProps,
 } from './types';
-import { DEFAULT_LEGEND_FORM_DATA, OpacityEnum } from '../constants';
+import { DEFAULT_LEGEND_FORM_DATA } from '../types';
 import {
   extractGroupbyLabel,
   getChartPadding,
@@ -44,6 +44,7 @@ import {
   getLegendProps,
 } from '../utils/series';
 import { defaultGrid, defaultTooltip } from '../defaults';
+import { OpacityEnum } from '../constants';
 
 export function formatLabel({
   params,

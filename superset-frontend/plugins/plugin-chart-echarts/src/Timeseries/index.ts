@@ -26,7 +26,7 @@ import {
   t,
 } from '@superset-ui/core';
 import buildQuery from './buildQuery';
-import controlPanel from './Regular/Line/controlPanel';
+import controlPanel from './controlPanel';
 import transformProps from './transformProps';
 import thumbnail from './images/thumbnail.png';
 import {

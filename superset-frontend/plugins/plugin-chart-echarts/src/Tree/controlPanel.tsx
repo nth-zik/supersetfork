@@ -20,7 +20,6 @@ import React from 'react';
 import { FeatureFlag, isFeatureEnabled, t } from '@superset-ui/core';
 import {
   ControlPanelConfig,
-  getStandardizedControls,
   sections,
   sharedControls,
 } from '@superset-ui/chart-controls';
@@ -286,9 +285,13 @@ const controlPanel: ControlPanelConfig = {
       ],
     },
   ],
-  formDataOverrides: formData => ({
+  denormalizeFormData: formData => ({
     ...formData,
-    metric: getStandardizedControls().shiftMetric(),
+    metric: formData.standardizedFormData.standardizedState.metrics[0],
+  }),
+  updateStandardizedState: (prevState, currState) => ({
+    ...currState,
+    metrics: [currState.metrics[0], ...prevState.metrics.slice(1)],
   }),
 };
 

@@ -142,7 +142,7 @@ VERSION_SHA = _try_json_readsha(VERSION_INFO_FILE, VERSION_SHA_LENGTH)
 # can be replaced at build time to expose build information.
 BUILD_NUMBER = None
 
-# default viz used in chart explorer & SQL Lab explore
+# default viz used in chart explorer
 DEFAULT_VIZ_TYPE = "table"
 
 # default row limit when requesting chart data
@@ -236,9 +236,6 @@ SHOW_STACKTRACE = True
 # When proxying to a different port, set "x_port" to 0 to avoid downstream issues.
 ENABLE_PROXY_FIX = False
 PROXY_FIX_CONFIG = {"x_for": 1, "x_proto": 1, "x_host": 1, "x_port": 1, "x_prefix": 1}
-
-# Configuration for scheduling queries from SQL Lab.
-SCHEDULED_QUERIES: Dict[str, Any] = {}
 
 # ------------------------------
 # GLOBALS FOR APP Builder

@@ -16,21 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import { combineReducers } from 'redux';
 
-var _paq = (window._paq = window._paq || []);
-/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-/* We explicitly disable cookie tracking to avoid privacy issues */
-_paq.push(['disableCookies']);
-_paq.push(['trackPageView']);
-_paq.push(['enableLinkTracking']);
-(function () {
-  var u = 'https://analytics.apache.org/';
-  _paq.push(['setTrackerUrl', u + 'matomo.php']);
-  _paq.push(['setSiteId', '22']);
-  var d = document,
-    g = d.createElement('script'),
-    s = d.getElementsByTagName('script')[0];
-  g.async = true;
-  g.src = u + 'matomo.js';
-  s.parentNode.insertBefore(g, s);
-})();
+import reports from 'src/reports/reducers/reports';
+import charts from 'src/components/Chart/chartReducer';
+import dataMask from 'src/dataMask/reducer';
+import messageToasts from 'src/components/MessageToasts/reducers';
+import saveModal from './saveModalReducer';
+import explore from './exploreReducer';
+
+const impressionId = (state = '') => state;
+
+export default combineReducers({
+  charts,
+  saveModal,
+  dataMask,
+  explore,
+  impressionId,
+  messageToasts,
+  reports,
+});

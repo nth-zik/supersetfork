@@ -22,7 +22,10 @@ import {
 } from 'src/types/bootstrapTypes';
 import Dashboard from 'src/types/Dashboard';
 import Owner from 'src/types/Owner';
-import { canUserEditDashboard, isUserAdmin } from './permissionUtils';
+import findPermission, {
+  canUserEditDashboard,
+  isUserAdmin,
+} from './findPermission';
 
 const ownerUser: UserWithPermissionsAndRoles = {
   createdOn: '2021-05-12T16:56:22.116839',
@@ -61,6 +64,54 @@ const owner: Owner = {
 };
 
 const undefinedUser: UndefinedUser = {};
+
+describe('findPermission', () => {
+  it('findPermission for single role', () => {
+    expect(findPermission('abc', 'def', { role: [['abc', 'def']] })).toEqual(
+      true,
+    );
+
+    expect(findPermission('abc', 'def', { role: [['abc', 'de']] })).toEqual(
+      false,
+    );
+
+    expect(findPermission('abc', 'def', { role: [] })).toEqual(false);
+  });
+
+  it('findPermission for multiple roles', () => {
+    expect(
+      findPermission('abc', 'def', {
+        role1: [
+          ['ccc', 'aaa'],
+          ['abc', 'def'],
+        ],
+        role2: [['abc', 'def']],
+      }),
+    ).toEqual(true);
+
+    expect(
+      findPermission('abc', 'def', {
+        role1: [['abc', 'def']],
+        role2: [['abc', 'dd']],
+      }),
+    ).toEqual(true);
+
+    expect(
+      findPermission('abc', 'def', {
+        role1: [['ccc', 'aaa']],
+        role2: [['aaa', 'ddd']],
+      }),
+    ).toEqual(false);
+
+    expect(findPermission('abc', 'def', { role1: [], role2: [] })).toEqual(
+      false,
+    );
+  });
+
+  it('handles nonexistent roles', () => {
+    expect(findPermission('abc', 'def', null)).toEqual(false);
+  });
+});
 
 describe('canUserEditDashboard', () => {
   const dashboard: Dashboard = {

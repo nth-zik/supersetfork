@@ -25,7 +25,6 @@ import {
   sharedControls,
   ControlStateMapping,
   emitFilterControl,
-  getStandardizedControls,
 } from '@superset-ui/chart-controls';
 import { DEFAULT_FORM_DATA, EchartsFunnelLabelTypeType } from './types';
 import { legendSection } from '../controls';
@@ -144,10 +143,14 @@ const config: ControlPanelConfig = {
       },
     };
   },
-  formDataOverrides: formData => ({
+  denormalizeFormData: formData => ({
     ...formData,
-    metric: getStandardizedControls().shiftMetric(),
-    groupby: getStandardizedControls().popAllColumns(),
+    metric: formData.standardizedFormData.standardizedState.metrics[0],
+    groupby: formData.standardizedFormData.standardizedState.columns,
+  }),
+  updateStandardizedState: (prevState, currState) => ({
+    ...currState,
+    metrics: [currState.metrics[0], ...prevState.metrics.slice(1)],
   }),
 };
 

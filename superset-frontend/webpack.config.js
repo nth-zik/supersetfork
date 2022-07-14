@@ -48,6 +48,7 @@ const {
   analyzeBundle = false,
   analyzerPort = 8888,
   nameChunks = false,
+  open = true
 } = parsedArgs;
 const isDevMode = mode !== 'production';
 const isDevServer = process.argv[1].includes('webpack-dev-server');
@@ -210,6 +211,7 @@ const config = {
     spa: addPreamble('/src/views/index.tsx'),
     embedded: addPreamble('/src/embedded/index.tsx'),
     addSlice: addPreamble('/src/addSlice/index.tsx'),
+    explore: addPreamble('/src/explore/index.jsx'),
     sqllab: addPreamble('/src/SqlLab/index.tsx'),
     profile: addPreamble('/src/profile/index.tsx'),
     showSavedQuery: [path.join(APP_DIR, '/src/showSavedQuery/index.jsx')],
@@ -289,6 +291,12 @@ const config = {
       //  AntD version conflict has been resolved
       antd: path.resolve(path.join(APP_DIR, './node_modules/antd')),
       react: path.resolve(path.join(APP_DIR, './node_modules/react')),
+      handlebars: path.resolve(
+        path.join(
+          APP_DIR,
+          './node_modules/handlebars/dist/handlebars.amd.min.js',
+        ),
+      ),
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.yml'],
     fallback: {
@@ -311,7 +319,7 @@ const config = {
         test: /\.tsx?$/,
         exclude: [/\.test.tsx?$/],
         use: [
-          'thread-loader',
+          // 'thread-loader',
           babelLoader,
           {
             loader: 'ts-loader',
@@ -324,8 +332,8 @@ const config = {
               // the same options in `tsconfig.json`, because they may still
               // be overriden by `tsconfig.json` in node_modules subdirectories.
               compilerOptions: {
-                esModuleInterop: false,
-                importHelpers: false,
+                esModuleInterop: true,
+                skipLibCheck: true,
                 module: 'esnext',
                 target: 'esnext',
               },
@@ -384,6 +392,9 @@ const config = {
               sourceMap: true,
               lessOptions: {
                 javascriptEnabled: true,
+                modifyVars: {
+                  'root-entry-name': 'default',
+                },
               },
             },
           },
@@ -452,6 +463,9 @@ const config = {
   },
   plugins,
   devtool: 'source-map',
+  stats: {
+    warningsFilter: /export .* was not found in/
+  }
 };
 
 // find all the symlinked plugins and use their source code for imports
@@ -481,6 +495,7 @@ if (isDevMode) {
     historyApiFallback: true,
     hot: true,
     port: devserverPort,
+    open,
     // Only serves bundled files from webpack-dev-server
     // and proxy everything else to Superset backend
     proxy: [

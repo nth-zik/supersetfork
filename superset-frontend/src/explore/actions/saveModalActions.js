@@ -62,16 +62,13 @@ export function removeSaveModalAlert() {
 
 export function saveSlice(formData, requestParams) {
   return dispatch => {
-    let url = getExploreUrl({
+    const url = getExploreUrl({
       formData,
       endpointType: 'base',
       force: false,
       curUrl: null,
       requestParams,
     });
-
-    // TODO: This will be removed in the next PR that will change the logic to save a slice
-    url = url.replace('/explore', '/superset/explore');
 
     // Save the query context so we can re-generate the data from Python
     // for alerts and reports

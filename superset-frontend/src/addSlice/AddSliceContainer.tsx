@@ -24,13 +24,12 @@ import { URL_PARAMS } from 'src/constants';
 import { isNullish } from 'src/utils/common';
 import Button from 'src/components/Button';
 import { Select, Steps } from 'src/components';
+import { FormLabel } from 'src/components/Form';
 import { Tooltip } from 'src/components/Tooltip';
 
 import VizTypeGallery, {
   MAX_ADVISABLE_VIZ_GALLERY_WIDTH,
 } from 'src/explore/components/controls/VizTypeControl/VizTypeGallery';
-import { findPermission } from 'src/utils/findPermission';
-import { UserWithPermissionsAndRoles } from 'src/types/bootstrapTypes';
 
 type Dataset = {
   id: number;
@@ -39,14 +38,11 @@ type Dataset = {
   datasource_type: string;
 };
 
-export type AddSliceContainerProps = {
-  user: UserWithPermissionsAndRoles;
-};
+export type AddSliceContainerProps = {};
 
 export type AddSliceContainerState = {
   datasource?: { label: string; value: string };
-  vizType: string | null;
-  canCreateDataset: boolean;
+  visType: string | null;
 };
 
 const ESTIMATED_NAV_HEIGHT = 56;
@@ -77,6 +73,7 @@ const StyledContainer = styled.div`
       display: flex;
       flex-direction: row;
       align-items: center;
+      margin-bottom: ${theme.gridUnit * 2}px;
 
       & > div {
         min-width: 200px;
@@ -183,24 +180,6 @@ const StyledLabel = styled.span`
   `}
 `;
 
-const StyledStepTitle = styled.span`
-  ${({
-    theme: {
-      typography: { sizes, weights },
-    },
-  }) => `
-      font-size: ${sizes.m}px;
-      font-weight: ${weights.bold};
-    `}
-`;
-
-const StyledStepDescription = styled.div`
-  ${({ theme: { gridUnit } }) => `
-    margin-top: ${gridUnit * 4}px;
-    margin-bottom: ${gridUnit * 3}px;
-  `}
-`;
-
 export default class AddSliceContainer extends React.PureComponent<
   AddSliceContainerProps,
   AddSliceContainerState
@@ -208,29 +187,26 @@ export default class AddSliceContainer extends React.PureComponent<
   constructor(props: AddSliceContainerProps) {
     super(props);
     this.state = {
-      vizType: null,
-      canCreateDataset: findPermission(
-        'can_write',
-        'Dataset',
-        props.user.roles,
-      ),
+      visType: null,
     };
 
     this.changeDatasource = this.changeDatasource.bind(this);
-    this.changeVizType = this.changeVizType.bind(this);
+    this.changeVisType = this.changeVisType.bind(this);
     this.gotoSlice = this.gotoSlice.bind(this);
     this.newLabel = this.newLabel.bind(this);
     this.loadDatasources = this.loadDatasources.bind(this);
-    this.onVizTypeDoubleClick = this.onVizTypeDoubleClick.bind(this);
   }
 
   exploreUrl() {
     const dashboardId = getUrlParam(URL_PARAMS.dashboardId);
-    let url = `/explore/?viz_type=${this.state.vizType}&datasource=${this.state.datasource?.value}`;
-    if (!isNullish(dashboardId)) {
-      url += `&dashboard_id=${dashboardId}`;
-    }
-    return url;
+    const formData = encodeURIComponent(
+      JSON.stringify({
+        viz_type: this.state.visType,
+        datasource: this.state.datasource?.value,
+        ...(!isNullish(dashboardId) && { dashboardId }),
+      }),
+    );
+    return `/superset/explore/?form_data=${formData}`;
   }
 
   gotoSlice() {
@@ -241,18 +217,12 @@ export default class AddSliceContainer extends React.PureComponent<
     this.setState({ datasource });
   }
 
-  changeVizType(vizType: string | null) {
-    this.setState({ vizType });
+  changeVisType(visType: string | null) {
+    this.setState({ visType });
   }
 
   isBtnDisabled() {
-    return !(this.state.datasource?.value && this.state.vizType);
-  }
-
-  onVizTypeDoubleClick() {
-    if (!this.isBtnDisabled()) {
-      this.gotoSlice();
-    }
+    return !(this.state.datasource?.value && this.state.visType);
   }
 
   newLabel(item: Dataset) {
@@ -306,49 +276,15 @@ export default class AddSliceContainer extends React.PureComponent<
 
   render() {
     const isButtonDisabled = this.isBtnDisabled();
-    const datasetHelpText = this.state.canCreateDataset ? (
-      <span data-test="dataset-write">
-        <a
-          href="/tablemodelview/list/#create"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {t('Add a dataset')}
-        </a>
-        {` ${t('or')} `}
-        <a
-          href="https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard/#registering-a-new-table"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {`${t('view instructions')} `}
-          <i className="fa fa-external-link" />
-        </a>
-        .
-      </span>
-    ) : (
-      <span data-test="no-dataset-write">
-        <a
-          href="https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard/#registering-a-new-table"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {`${t('View instructions')} `}
-          <i className="fa fa-external-link" />
-        </a>
-        .
-      </span>
-    );
-
     return (
       <StyledContainer>
         <h3>{t('Create a new chart')}</h3>
         <Steps direction="vertical" size="small">
           <Steps.Step
-            title={<StyledStepTitle>{t('Choose a dataset')}</StyledStepTitle>}
+            title={<FormLabel>{t('Choose a dataset')}</FormLabel>}
             status={this.state.datasource?.value ? 'finish' : 'process'}
             description={
-              <StyledStepDescription className="dataset">
+              <div className="dataset">
                 <Select
                   autoFocus
                   ariaLabel={t('Dataset')}
@@ -360,22 +296,30 @@ export default class AddSliceContainer extends React.PureComponent<
                   showSearch
                   value={this.state.datasource}
                 />
-                {datasetHelpText}
-              </StyledStepDescription>
+                <span>
+                  {t(
+                    'Instructions to add a dataset are available in the Superset tutorial.',
+                  )}{' '}
+                  <a
+                    href="https://superset.apache.org/docs/creating-charts-dashboards/creating-your-first-dashboard/#registering-a-new-table"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <i className="fa fa-external-link" />
+                  </a>
+                </span>
+              </div>
             }
           />
           <Steps.Step
-            title={<StyledStepTitle>{t('Choose chart type')}</StyledStepTitle>}
-            status={this.state.vizType ? 'finish' : 'process'}
+            title={<FormLabel>{t('Choose chart type')}</FormLabel>}
+            status={this.state.visType ? 'finish' : 'process'}
             description={
-              <StyledStepDescription>
-                <VizTypeGallery
-                  className="viz-gallery"
-                  onChange={this.changeVizType}
-                  onDoubleClick={this.onVizTypeDoubleClick}
-                  selectedViz={this.state.vizType}
-                />
-              </StyledStepDescription>
+              <VizTypeGallery
+                className="viz-gallery"
+                onChange={this.changeVisType}
+                selectedViz={this.state.visType}
+              />
             }
           />
         </Steps>

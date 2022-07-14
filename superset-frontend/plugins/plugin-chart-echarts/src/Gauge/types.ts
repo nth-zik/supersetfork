@@ -22,8 +22,7 @@ import {
   QueryFormColumn,
   QueryFormData,
 } from '@superset-ui/core';
-import { EChartTransformedProps } from '../types';
-import { DEFAULT_LEGEND_FORM_DATA } from '../constants';
+import { DEFAULT_LEGEND_FORM_DATA, EChartTransformedProps } from '../types';
 
 export type AxisTickLineStyle = {
   width: number;

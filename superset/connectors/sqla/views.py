@@ -291,39 +291,21 @@ class RowLevelSecurityFiltersModelView(
     edit_title = _("Edit Row level security filter")
 
     list_columns = [
-        "name",
         "filter_type",
         "tables",
         "roles",
+        "group_key",
         "clause",
         "creator",
         "modified",
     ]
-    order_columns = ["name", "filter_type", "clause", "modified"]
-    edit_columns = [
-        "name",
-        "description",
-        "filter_type",
-        "tables",
-        "roles",
-        "group_key",
-        "clause",
-    ]
+    order_columns = ["filter_type", "group_key", "clause", "modified"]
+    edit_columns = ["filter_type", "tables", "roles", "group_key", "clause"]
     show_columns = edit_columns
-    search_columns = (
-        "name",
-        "description",
-        "filter_type",
-        "tables",
-        "roles",
-        "group_key",
-        "clause",
-    )
+    search_columns = ("filter_type", "tables", "roles", "group_key", "clause")
     add_columns = edit_columns
     base_order = ("changed_on", "desc")
     description_columns = {
-        "name": _("Choose a unique name"),
-        "description": _("Optionally add a detailed description"),
         "filter_type": _(
             "Regular filters add where clauses to queries if a user belongs to a "
             "role referenced in the filter. Base filters apply filters to all queries "
@@ -356,16 +338,12 @@ class RowLevelSecurityFiltersModelView(
         ),
     }
     label_columns = {
-        "name": _("Name"),
-        "description": _("Description"),
         "tables": _("Tables"),
         "roles": _("Roles"),
         "clause": _("Clause"),
         "creator": _("Creator"),
         "modified": _("Modified"),
     }
-    validators_columns = {"tables": [SelectDataRequired()]}
-
     if app.config["RLS_FORM_QUERY_REL_FIELDS"]:
         add_form_query_rel_fields = app.config["RLS_FORM_QUERY_REL_FIELDS"]
         edit_form_query_rel_fields = add_form_query_rel_fields

@@ -17,21 +17,22 @@
  * under the License.
  */
 import React from 'react';
-import { t } from '@superset-ui/core';
+import { FeatureFlag, isFeatureEnabled, t } from '@superset-ui/core';
 import {
   ControlPanelConfig,
   ControlPanelsContainerProps,
   D3_TIME_FORMAT_DOCS,
-  getStandardizedControls,
+  emitFilterControl,
   sections,
   sharedControls,
 } from '@superset-ui/chart-controls';
 
-import { DEFAULT_FORM_DATA } from '../../constants';
+import { DEFAULT_FORM_DATA } from '../../types';
 import {
   legendSection,
   richTooltipSection,
   showValueSection,
+  xAxisControl,
 } from '../../../controls';
 
 const {
@@ -48,7 +49,22 @@ const {
 const config: ControlPanelConfig = {
   controlPanelSections: [
     sections.legacyTimeseriesTime,
-    sections.echartsTimeSeriesQuery,
+    {
+      label: t('Query'),
+      expanded: true,
+      controlSetRows: [
+        isFeatureEnabled(FeatureFlag.GENERIC_CHART_AXES) ? [xAxisControl] : [],
+        ['metrics'],
+        ['groupby'],
+        ['adhoc_filters'],
+        emitFilterControl,
+        ['limit'],
+        ['timeseries_limit_metric'],
+        ['order_desc'],
+        ['row_limit'],
+        ['truncate_metric'],
+      ],
+    },
     sections.advancedAnalyticsControls,
     sections.annotationsAndLayersControls,
     sections.forecastIntervalControls,
@@ -208,10 +224,10 @@ const config: ControlPanelConfig = {
       default: rowLimit,
     },
   },
-  formDataOverrides: formData => ({
+  denormalizeFormData: formData => ({
     ...formData,
-    metrics: getStandardizedControls().popAllMetrics(),
-    groupby: getStandardizedControls().popAllColumns(),
+    metrics: formData.standardizedFormData.standardizedState.metrics,
+    groupby: formData.standardizedFormData.standardizedState.columns,
   }),
 };
 

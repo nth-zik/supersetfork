@@ -81,7 +81,7 @@ const TableLabel = styled.span`
 
 interface TableSelectorProps {
   clearable?: boolean;
-  database?: DatabaseObject | null;
+  database?: DatabaseObject;
   emptyState?: ReactNode;
   formMode?: boolean;
   getDbList?: (arg0: any) => {};
@@ -166,11 +166,12 @@ const TableSelector: FunctionComponent<TableSelectorProps> = ({
   onTableSelectChange,
 }) => {
   const [currentDatabase, setCurrentDatabase] = useState<
-    DatabaseObject | null | undefined
+    DatabaseObject | undefined
   >(database);
   const [currentSchema, setCurrentSchema] = useState<string | undefined>(
     schema,
   );
+
   const [tableOptions, setTableOptions] = useState<TableOption[]>([]);
   const [tableSelectValue, setTableSelectValue] = useState<
     SelectValue | undefined
@@ -188,10 +189,6 @@ const TableSelector: FunctionComponent<TableSelectorProps> = ({
       setTableSelectValue(undefined);
     }
   }, [database, tableSelectMode]);
-
-  useEffect(() => {
-    setCurrentDatabase(database);
-  }, [database]);
 
   useEffect(() => {
     if (tableSelectMode === 'single') {

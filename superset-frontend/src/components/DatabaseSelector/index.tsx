@@ -87,7 +87,7 @@ export type DatabaseObject = {
 type SchemaValue = { label: string; value: string };
 
 export interface DatabaseSelectorProps {
-  db?: DatabaseObject | null;
+  db?: DatabaseObject;
   emptyState?: ReactNode;
   formMode?: boolean;
   getDbList?: (arg0: any) => {};

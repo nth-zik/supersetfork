@@ -40,6 +40,8 @@ export const marginBottom = (theme: SupersetTheme) => css`
 `;
 
 export const StyledFormHeader = styled.header`
+  border-bottom: ${({ theme }) => `${theme.gridUnit * 0.25}px solid
+    ${theme.colors.grayscale.light2};`}
   padding: ${({ theme }) => theme.gridUnit * 2}px
     ${({ theme }) => theme.gridUnit * 4}px;
   line-height: ${({ theme }) => theme.gridUnit * 6}px;

@@ -263,7 +263,6 @@ supersetNode:
     # requests:
     #  cpu: 100m
     #  memory: 128Mi
-  securityContext: {}
 ##
 ## Superset worker configuration
 supersetWorker:
@@ -294,7 +293,6 @@ supersetWorker:
     # requests:
     #  cpu: 100m
     #  memory: 128Mi
-  securityContext: {}
 ##
 ## Superset beat configuration (to trigger scheduled jobs like reports)
 supersetCeleryBeat:
@@ -327,7 +325,6 @@ supersetCeleryBeat:
     # requests:
     #  cpu: 100m
     #  memory: 128Mi
-  securityContext: {}
 ##
 ## Init job configuration
 init:
@@ -391,7 +388,6 @@ init:
     fi
   ## Annotations to be added to init job pods
   podAnnotations: {}
-  securityContext: {}
 ##
 ## Configuration values for the postgresql dependency.
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
