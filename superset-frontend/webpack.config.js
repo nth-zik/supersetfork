@@ -48,7 +48,7 @@ const {
   analyzeBundle = false,
   analyzerPort = 8888,
   nameChunks = false,
-  open = true
+  open = true,
 } = parsedArgs;
 const isDevMode = mode !== 'production';
 const isDevServer = process.argv[1].includes('webpack-dev-server');
@@ -154,18 +154,18 @@ if (!isDevMode) {
     }),
   );
 
-  plugins.push(
-    // runs type checking on a separate process to speed up the build
-    new ForkTsCheckerWebpackPlugin({
-      eslint: {
-        files: './{src,packages,plugins}/**/*.{ts,tsx,js,jsx}',
-        memoryLimit: 4096,
-        options: {
-          ignorePath: './.eslintignore',
-        },
-      },
-    }),
-  );
+  // plugins.push(
+  //   // runs type checking on a separate process to speed up the build
+  //   new ForkTsCheckerWebpackPlugin({
+  //     eslint: {
+  //       files: './{src,packages,plugins}/**/*.{ts,tsx,js,jsx}',
+  //       memoryLimit: 4096,
+  //       options: {
+  //         ignorePath: './.eslintignore',
+  //       },
+  //     },
+  //   }),
+  // );
 }
 
 const PREAMBLE = [path.join(APP_DIR, '/src/preamble.ts')];
@@ -464,8 +464,8 @@ const config = {
   plugins,
   devtool: 'source-map',
   stats: {
-    warningsFilter: /export .* was not found in/
-  }
+    warningsFilter: /export .* was not found in/,
+  },
 };
 
 // find all the symlinked plugins and use their source code for imports

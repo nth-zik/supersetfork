@@ -408,6 +408,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         self.configure_fab()
         self.configure_url_map_converters()
         self.configure_data_sources()
+        print("Init app configure_auth_provider")
         self.configure_auth_provider()
         self.configure_async_queries()
 

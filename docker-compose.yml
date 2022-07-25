@@ -14,7 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-x-superset-image: &superset-image apache/superset:${TAG:-latest-dev}
+x-superset-image: &superset-image
+  platform: linux/amd64
+  build:
+    context: .
+    dockerfile: ./Dockerfile
 x-superset-user: &superset-user root
 x-superset-depends-on: &superset-depends-on
   - db
@@ -26,6 +30,10 @@ x-superset-volumes: &superset-volumes
   - ./superset-frontend:/app/superset-frontend
   - superset_home:/app/superset_home
   - ./tests:/app/tests
+x-superset-networks: &superset-networks
+  networks:
+    - proxynet
+
 
 version: "3.7"
 services:
@@ -37,6 +45,7 @@ services:
       - "127.0.0.1:6379:6379"
     volumes:
       - redis:/data
+    <<: *superset-networks
 
   db:
     env_file: docker/.env
@@ -47,10 +56,11 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - db_home:/var/lib/postgresql/data
+    <<: *superset-networks
 
   superset:
     env_file: docker/.env
-    image: *superset-image
+    <<: *superset-image
     container_name: superset_app
     command: ["/app/docker/docker-bootstrap.sh", "app"]
     restart: unless-stopped
@@ -61,6 +71,7 @@ services:
     volumes: *superset-volumes
     environment:
       CYPRESS_CONFIG: "${CYPRESS_CONFIG}"
+    <<: *superset-networks
 
   superset-websocket:
     container_name: superset_websocket
@@ -89,9 +100,10 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_SSL=false
+    <<: *superset-networks
 
   superset-init:
-    image: *superset-image
+    <<: *superset-image
     container_name: superset_init
     command: ["/app/docker/docker-init.sh"]
     env_file: docker/.env
@@ -100,6 +112,7 @@ services:
     volumes: *superset-volumes
     environment:
       CYPRESS_CONFIG: "${CYPRESS_CONFIG}"
+    <<: *superset-networks
 
   superset-node:
     image: node:16
@@ -108,9 +121,10 @@ services:
     env_file: docker/.env
     depends_on: *superset-depends-on
     volumes: *superset-volumes
+    <<: *superset-networks
 
   superset-worker:
-    image: *superset-image
+    <<: *superset-image
     container_name: superset_worker
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
     env_file: docker/.env
@@ -121,9 +135,10 @@ services:
     # Bump memory limit if processing selenium / thumbnails on superset-worker
     # mem_limit: 2038m
     # mem_reservation: 128M
+    <<: *superset-networks
 
   superset-worker-beat:
-    image: *superset-image
+    <<: *superset-image
     container_name: superset_worker_beat
     command: ["/app/docker/docker-bootstrap.sh", "beat"]
     env_file: docker/.env
@@ -131,9 +146,10 @@ services:
     depends_on: *superset-depends-on
     user: *superset-user
     volumes: *superset-volumes
+    <<: *superset-networks
 
   superset-tests-worker:
-    image: *superset-image
+    <<: *superset-image
     container_name: superset_tests_worker
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
     env_file: docker/.env
@@ -143,10 +159,11 @@ services:
       REDIS_CELERY_DB: 2
       REDIS_RESULTS_DB: 3
       REDIS_HOST: localhost
-    network_mode: host
+    # network_mode: host
     depends_on: *superset-depends-on
     user: *superset-user
     volumes: *superset-volumes
+    <<: *superset-networks
 
 volumes:
   superset_home:
@@ -155,3 +172,8 @@ volumes:
     external: false
   redis:
     external: false
+
+networks:
+  proxynet:
+    name: superset_network
+    driver: bridge

@@ -1,0 +1,73 @@
+version: '3.4'
+volumes:
+  postgresql:
+  postgresql_data:
+
+services:
+  postgresql:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - proxy-net
+    container_name: postgresql
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./init_data_local_dev.sql:/init_data_local_dev.sql
+      - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+
+  kong:
+    build:
+      context: ./
+    image: kong-oidc:latest
+    container_name: kong-service
+    depends_on:
+      - postgresql
+    networks:
+      - proxy-net
+    ports:
+      - "8000:8000" # Listener
+      - "8001:8001" # Admin API
+      - "8443:8443" # Listener  (SSL)
+      - "8444:8444" # Admin API (SSL)
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgresql
+      KONG_PG_PORT: 5432
+      KONG_PG_DATABASE: kong
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: postgres
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_PROXY_LISTEN: 0.0.0.0:8000, 0.0.0.0:8443 ssl
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_PLUGINS: bundled,oidc
+      KONG_LOG_LEVEL: debug
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:17.0.1
+    depends_on:
+      - postgresql
+    command: start-dev --db=postgres
+    container_name: keycloak-service
+    networks:
+      - proxy-net
+    ports:
+      - "8180:8080"
+    environment:
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_DB_URL: jdbc:postgresql://postgresql:5432/keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+networks:
+  proxy-net:
+    name: superset_network
+    external: true

@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     /* Type Checking */
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": false,
+    "strictNullChecks": false,
     "resolveJsonModule": true,
 
     /* Modules */
@@ -47,7 +47,7 @@
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
 
     /* Backwards Compatibility */
     "suppressImplicitAnyIndexErrors": true,

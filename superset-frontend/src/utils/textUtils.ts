@@ -19,12 +19,12 @@
 /* eslint-disable global-require */
 const loadModule = () => {
   let module;
-  try {
-    // @ts-ignore
-    module = require('../../../superset_text'); // eslint-disable-line import/no-unresolved
-  } catch (e) {
-    module = {};
-  }
+  module = {};
+  // try {
+  //   // @ts-ignore
+  //   module = require('../../../superset_text'); // eslint-disable-line import/no-unresolved
+  // } catch (e) {
+  // }
   return module;
 };
 
