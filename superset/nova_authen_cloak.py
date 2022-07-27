@@ -19,12 +19,19 @@ class AuthOIDCView(AuthOIDView):
 
         @self.appbuilder.sm.oid.require_login
         def handle_login() -> Response:
-            user = sm.auth_user_oid(oidc.user_getfield("email"))
-            print("email", sm)
+            info = oidc.user_getinfo(
+                [
+                    "preferred_username",
+                    "given_name",
+                    "family_name",
+                    "email",
+                    "first_name",
+                    "last_name",
+                ]
+            )
+            info["username"] = info["preferred_username"]
+            user = sm.auth_user_oauth(info)
             if user is None:
-                info = oidc.user_getinfo(
-                    ["preferred_username", "given_name", "family_name", "email"]
-                )
                 user = sm.add_user(
                     info.get("preferred_username"),
                     info.get("given_name"),
