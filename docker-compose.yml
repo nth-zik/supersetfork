@@ -53,7 +53,7 @@ services:
     container_name: superset_db
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5432:5432"
+      - "5432:5432"
     volumes:
       - db_home:/var/lib/postgresql/data
     <<: *superset-networks
@@ -154,11 +154,11 @@ services:
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
     env_file: docker/.env
     environment:
-      DATABASE_HOST: localhost
-      DATABASE_DB: test
+      DATABASE_HOST: db
+      DATABASE_DB: superset
       REDIS_CELERY_DB: 2
       REDIS_RESULTS_DB: 3
-      REDIS_HOST: localhost
+      REDIS_HOST: redis
     # network_mode: host
     depends_on: *superset-depends-on
     user: *superset-user
