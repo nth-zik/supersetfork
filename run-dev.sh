@@ -1,4 +1,5 @@
+docker compose up -d
 cd ./sso
 docker compose up -d
 cd ..
-docker compose up
+docker compose logs -f -tail 50
