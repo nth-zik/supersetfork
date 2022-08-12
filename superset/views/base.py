@@ -642,7 +642,7 @@ class CsvResponse(Response):
     Override Response to take into account csv encoding from config.py
     """
 
-    charset = conf["CSV_EXPORT"].get("encoding", "utf-8")
+    charset = conf["CSV_EXPORT"].get("encoding", "utf-8-sig")
     default_mimetype = "text/csv"
 
 

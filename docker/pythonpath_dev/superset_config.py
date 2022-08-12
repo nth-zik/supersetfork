@@ -27,6 +27,7 @@ from typing import Optional
 
 from cachelib.file import FileSystemCache
 from celery.schedules import crontab
+from flask import Flask, session
 
 logger = logging.getLogger()
 
@@ -112,3 +113,17 @@ try:
     )
 except ImportError:
     logger.info("Using default Docker config...")
+
+
+def make_session_permanent():
+    """
+    Enable maxAge for the cookie 'session'
+    """
+    session.permanent = True
+
+
+PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
+
+
+def FLASK_APP_MUTATOR(app: Flask) -> None:
+    app.before_request_funcs.setdefault(None, []).append(make_session_permanent)
