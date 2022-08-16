@@ -100,7 +100,8 @@ WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 
 SQLLAB_CTAS_NO_LIMIT = True
 ENABLE_TEMPLATE_PROCESSING = True
-
+ENABLE_SCHEDULED_EMAIL_REPORTS = True
+EMAIL_NOTIFICATIONS = True
 #
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden
