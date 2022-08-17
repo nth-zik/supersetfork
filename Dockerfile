@@ -161,6 +161,7 @@ FROM lean AS ci
 COPY --chown=superset ./docker/docker-bootstrap.sh /app/docker/
 COPY --chown=superset ./docker/docker-init.sh /app/docker/
 COPY --chown=superset ./docker/docker-ci.sh /app/docker/
+COPY --chown=superset ./docker/pythonpath_dev /app/docker/pythonpath_dev
 
 RUN chmod a+x /app/docker/*.sh
 
