@@ -46,7 +46,8 @@ export const AlertReportCronScheduler: React.FC<AlertReportCronSchedulerProps> =
     const customSetValue = useCallback(
       (newValue: string) => {
         onChange(newValue);
-        inputRef.current?.setValue(newValue);
+        typeof inputRef.current?.setValue === 'function' &&
+          inputRef.current?.setValue(newValue);
       },
       [inputRef, onChange],
     );
