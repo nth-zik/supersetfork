@@ -158,7 +158,7 @@ USER superset
 ######################################################################
 FROM lean AS ci
 
-COPY ./docker /app/docker
+COPY --chown=superset ./docker/ /app/docker/
 COPY --chown=superset ./docker/docker-bootstrap.sh /app/docker/
 COPY --chown=superset ./docker/docker-init.sh /app/docker/
 COPY --chown=superset ./docker/docker-ci.sh /app/docker/
