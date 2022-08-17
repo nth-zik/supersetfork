@@ -46,7 +46,7 @@ import pkg_resources
 from cachelib.base import BaseCache
 from celery.schedules import crontab
 from dateutil import tz
-from flask import Blueprint
+from flask import Blueprint, Flask, session
 from flask_appbuilder.security.manager import AUTH_OID
 from pandas._libs.parsers import STR_NA_VALUES  # pylint: disable=no-name-in-module
 
@@ -415,7 +415,7 @@ DEFAULT_FEATURE_FLAGS: Dict[str, bool] = {
     "VERSIONED_EXPORT": True,
     "EMBEDDED_SUPERSET": False,
     # Enables Alerts and reports new implementation
-    "ALERT_REPORTS": False,
+    "ALERT_REPORTS": True,
     "DASHBOARD_RBAC": True,
     "ENABLE_EXPLORE_DRAG_AND_DROP": True,
     "ENABLE_FILTER_BOX_MIGRATION": False,
@@ -955,7 +955,7 @@ CONFIG_PATH_ENV_VAR = "SUPERSET_CONFIG_PATH"
 # a reference to the Flask app. This can be used to alter the Flask app
 # in whatever way.
 # example: FLASK_APP_MUTATOR = lambda x: x.before_request = f
-FLASK_APP_MUTATOR = None
+# FLASK_APP_MUTATOR = None
 
 # Set this to false if you don't want users to be able to request/grant
 # datasource access requests from/to other users.
@@ -1343,3 +1343,17 @@ elif importlib.util.find_spec("superset_config") and not is_test():
     except Exception:
         logger.exception("Found but failed to import local superset_config")
         raise
+
+
+def make_session_permanent():
+    """
+    Enable maxAge for the cookie 'session'
+    """
+    session.permanent = True
+
+
+PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
+
+
+def FLASK_APP_MUTATOR(app: Flask) -> None:
+    app.before_request_funcs.setdefault(None, []).append(make_session_permanent)
