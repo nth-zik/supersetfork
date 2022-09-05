@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+import SupersetVizPluginsPreset from '../visualizations/presets/SupersetVizPluginsPreset';
 // For individual deployments to add custom overrides
-export default function setupPluginsExtra() {}
+export default function setupPluginsExtra() {
+  new SupersetVizPluginsPreset().register();
+}
