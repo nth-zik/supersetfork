@@ -30,16 +30,17 @@ class AuthOIDCView(AuthOIDView):
                 ]
             )
             info["username"] = info["preferred_username"]
+            info["first_name"] = info["given_name"]
+            info["last_name"] = info["family_name"]
             user = sm.auth_user_oauth(info)
             if user is None:
                 user = sm.add_user(
-                    info.get("preferred_username"),
-                    info.get("given_name"),
-                    info.get("family_name"),
-                    info.get("email"),
-                    sm.find_role("Gamma"),
+                    username=info.get("preferred_username"),
+                    first_name=info.get("given_name"),
+                    last_name=info.get("family_name"),
+                    email=info.get("email"),
+                    role=sm.find_role("Gamma"),
                 )
-                print("user", user)
             login_user(user, remember=False)
             return redirect(self.appbuilder.get_url_for_index)
 
