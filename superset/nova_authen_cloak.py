@@ -29,9 +29,9 @@ class AuthOIDCView(AuthOIDView):
                     "last_name",
                 ]
             )
-            info["username"] = info["preferred_username"]
-            info["first_name"] = info["given_name"]
-            info["last_name"] = info["family_name"]
+            info["username"] = info.get("preferred_username")
+            info["first_name"] = info.get("given_name")
+            info["last_name"] = info.get("family_name")
             user = sm.auth_user_oauth(info)
             if user is None:
                 user = sm.add_user(
