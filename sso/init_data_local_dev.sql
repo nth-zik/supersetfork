@@ -33,8 +33,8 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.4
--- Dumped by pg_dump version 14.4
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -59,8 +59,8 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.4
--- Dumped by pg_dump version 14.4
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -2265,6 +2265,8 @@ af67d819-5a20-40cb-9525-5026d9f8e785	ea56e087-2665-446d-8e48-8c3b7a523f76
 COPY public.credential (id, salt, type, user_id, created_date, user_label, secret_data, credential_data, priority) FROM stdin;
 bc63e65e-2a5b-4ca1-bc09-ac5c34c12d0c	\N	password	5035e40d-7ef5-4b1a-97e0-28bfa3396f44	1658395380806	\N	{"value":"OfRB/i9HUmqQA4Zi7f7USP+H6bF4pkpQ1r6zrsV/6wMkCdbBkVjoQPxtsQ3UXYDP9+9zwT72QFtfs2RIXI+6fA==","salt":"zUDhlc9Mef2gBf/WXHw3hQ==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
 50f24c73-5435-4bf8-9f90-fca43b96fed0	\N	password	0cd1e99f-227a-4e01-a786-088b7c7f2232	1658396282020	\N	{"value":"DLo4L9ypEwKeP7RcKX/jdNEobUtxbTrEqYA4hLiUh8s8wxAeXMBmG6aaBtWk54IexhMBgK5xxnwQw3JmHh08dg==","salt":"j3j82TTdGXLdqXcdr3o6/A==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
+928b3bbf-b97f-4832-ad3d-d072589cbb24	\N	password	556af4cb-6c10-421e-80a3-1805558f6f10	1662620710396	\N	{"value":"UJWpYNM5NB8//Nt0S1wGzExUM/oG6LJBO4k3aNFI6Nj1tfH5pJeSYEzJhvkgtvmofY8Wtxd2ZRCrCHnX1yLJ+Q==","salt":"oV1UUjQc4MMn5QsjOvYSBQ==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
+814063c3-af7e-402f-b225-e7276aaef896	\N	password	1deb9ac9-4470-467e-8354-2034d3e4af1d	1662622239020	\N	{"value":"EW+5CJWpoaPu+MjVM4sJ3j3ysewIvs386+c3EFqbQRlEePiJjCHDW0z9JmFqgGDOUl9BKzEwdspQIzcCakb7Bw==","salt":"OGxMZGx5eJpelGv4rNz4jg==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
 \.
 
 
@@ -2551,6 +2553,11 @@ COPY public.idp_mapper_config (idp_mapper_id, value, name) FROM stdin;
 --
 
 COPY public.keycloak_group (id, name, parent_group, realm_id) FROM stdin;
+bc929fb1-deaa-4a94-8c6f-4b307758b7e8	Test group	 	Superset
+fce2f24f-567c-4f0d-8cb2-fdb23da37bcf	Admin	 	Superset
+7346885f-6cfb-45ca-a2b2-b4334c53e4d8	Public	 	Superset
+c28ef083-98d8-446f-a13b-d75a1d40deb5	Alpha	 	Superset
+1f9201bc-bd1c-452e-adfb-b34de6fc2c3d	Gamma	 	Superset
 \.
 
 
@@ -2741,6 +2748,7 @@ a0f3461a-dd3d-47a7-bb0e-8c7184e16936	groups	openid-connect	oidc-usermodel-realm-
 b6ada83a-9a11-4e86-8ac9-cc96e335edff	Client ID	openid-connect	oidc-usersessionmodel-note-mapper	2c656d86-fa81-4b7c-8277-7ed7c57e67f5	\N
 9e2239dc-7de8-43cb-b2db-0ea825769906	Client Host	openid-connect	oidc-usersessionmodel-note-mapper	2c656d86-fa81-4b7c-8277-7ed7c57e67f5	\N
 4533d8af-9736-4e0a-93ec-823d60652c9a	Client IP Address	openid-connect	oidc-usersessionmodel-note-mapper	2c656d86-fa81-4b7c-8277-7ed7c57e67f5	\N
+a3f9b001-48bc-4897-b939-7eb21b27ffb8	groups_membership	openid-connect	oidc-group-membership-mapper	2c656d86-fa81-4b7c-8277-7ed7c57e67f5	\N
 \.
 
 
@@ -3054,6 +3062,11 @@ b6ada83a-9a11-4e86-8ac9-cc96e335edff	true	id.token.claim
 b6ada83a-9a11-4e86-8ac9-cc96e335edff	true	access.token.claim
 b6ada83a-9a11-4e86-8ac9-cc96e335edff	clientId	claim.name
 b6ada83a-9a11-4e86-8ac9-cc96e335edff	String	jsonType.label
+a3f9b001-48bc-4897-b939-7eb21b27ffb8	false	full.path
+a3f9b001-48bc-4897-b939-7eb21b27ffb8	true	id.token.claim
+a3f9b001-48bc-4897-b939-7eb21b27ffb8	true	access.token.claim
+a3f9b001-48bc-4897-b939-7eb21b27ffb8	groups_membership	claim.name
+a3f9b001-48bc-4897-b939-7eb21b27ffb8	true	userinfo.token.claim
 \.
 
 
@@ -3072,71 +3085,6 @@ Superset	60	300	300	\N	\N	\N	t	f	0	\N	Superset	0	\N	f	f	f	f	EXTERNAL	1800	36000	
 --
 
 COPY public.realm_attribute (name, realm_id, value) FROM stdin;
-_browser_header.contentSecurityPolicyReportOnly	master
-_browser_header.xContentTypeOptions	master	nosniff
-_browser_header.xRobotsTag	master	none
-_browser_header.xFrameOptions	master	SAMEORIGIN
-_browser_header.contentSecurityPolicy	master	frame-src 'self'; frame-ancestors 'self'; object-src 'none';
-_browser_header.xXSSProtection	master	1; mode=block
-_browser_header.strictTransportSecurity	master	max-age=31536000; includeSubDomains
-bruteForceProtected	master	false
-permanentLockout	master	false
-maxFailureWaitSeconds	master	900
-minimumQuickLoginWaitSeconds	master	60
-waitIncrementSeconds	master	60
-quickLoginCheckMilliSeconds	master	1000
-maxDeltaTimeSeconds	master	43200
-failureFactor	master	30
-displayName	master	Keycloak
-displayNameHtml	master	<div class="kc-logo-text"><span>Keycloak</span></div>
-defaultSignatureAlgorithm	master	RS256
-offlineSessionMaxLifespanEnabled	master	false
-offlineSessionMaxLifespan	master	5184000
-_browser_header.contentSecurityPolicyReportOnly	Superset
-_browser_header.xContentTypeOptions	Superset	nosniff
-_browser_header.xRobotsTag	Superset	none
-_browser_header.xFrameOptions	Superset	SAMEORIGIN
-_browser_header.contentSecurityPolicy	Superset	frame-src 'self'; frame-ancestors 'self'; object-src 'none';
-_browser_header.xXSSProtection	Superset	1; mode=block
-_browser_header.strictTransportSecurity	Superset	max-age=31536000; includeSubDomains
-bruteForceProtected	Superset	false
-permanentLockout	Superset	false
-maxFailureWaitSeconds	Superset	900
-minimumQuickLoginWaitSeconds	Superset	60
-waitIncrementSeconds	Superset	60
-quickLoginCheckMilliSeconds	Superset	1000
-maxDeltaTimeSeconds	Superset	43200
-failureFactor	Superset	30
-defaultSignatureAlgorithm	Superset	RS256
-offlineSessionMaxLifespanEnabled	Superset	false
-offlineSessionMaxLifespan	Superset	5184000
-actionTokenGeneratedByAdminLifespan	Superset	43200
-actionTokenGeneratedByUserLifespan	Superset	300
-oauth2DeviceCodeLifespan	Superset	600
-oauth2DevicePollingInterval	Superset	5
-webAuthnPolicyRpEntityName	Superset	keycloak
-webAuthnPolicySignatureAlgorithms	Superset	ES256
-webAuthnPolicyRpId	Superset
-webAuthnPolicyAttestationConveyancePreference	Superset	not specified
-webAuthnPolicyAuthenticatorAttachment	Superset	not specified
-webAuthnPolicyRequireResidentKey	Superset	not specified
-webAuthnPolicyUserVerificationRequirement	Superset	not specified
-webAuthnPolicyCreateTimeout	Superset	0
-webAuthnPolicyAvoidSameAuthenticatorRegister	Superset	false
-webAuthnPolicyRpEntityNamePasswordless	Superset	keycloak
-webAuthnPolicySignatureAlgorithmsPasswordless	Superset	ES256
-webAuthnPolicyRpIdPasswordless	Superset
-webAuthnPolicyAttestationConveyancePreferencePasswordless	Superset	not specified
-webAuthnPolicyAuthenticatorAttachmentPasswordless	Superset	not specified
-webAuthnPolicyRequireResidentKeyPasswordless	Superset	not specified
-webAuthnPolicyUserVerificationRequirementPasswordless	Superset	not specified
-webAuthnPolicyCreateTimeoutPasswordless	Superset	0
-webAuthnPolicyAvoidSameAuthenticatorRegisterPasswordless	Superset	false
-cibaBackchannelTokenDeliveryMode	Superset	poll
-cibaExpiresIn	Superset	120
-cibaInterval	Superset	5
-cibaAuthRequestedUserHint	Superset	login_hint
-parRequestUriLifespan	Superset	60
 \.
 
 
@@ -3380,6 +3328,8 @@ COPY public.user_entity (id, email, email_constraint, email_verified, enabled, f
 5035e40d-7ef5-4b1a-97e0-28bfa3396f44	\N	19549a87-0376-460d-9d21-f9f91ca53ac8	f	t	\N	\N	\N	master	admin	1658395380701	\N	0
 38d778c6-6361-4eae-a04e-2c28f5acab7c	\N	ba81135c-15fe-4fd1-a6d1-62a1b54319e7	f	t	\N	\N	\N	Superset	service-account-client-superset	1658395547050	2c656d86-fa81-4b7c-8277-7ed7c57e67f5	0
 0cd1e99f-227a-4e01-a786-088b7c7f2232	hung@hung.com	hung@hung.com	f	t	\N	Hưng	Khoai To	Superset	hung	1658396274155	\N	0
+556af4cb-6c10-421e-80a3-1805558f6f10	\N	719e41a6-66f2-43a0-955e-574b9da88535	f	t	\N	\N	\N	Superset	test	1662620705374	\N	0
+1deb9ac9-4470-467e-8354-2034d3e4af1d	\N	63e41423-0f92-4d8f-a6bc-b29e4022ae54	f	t	\N	\N	\N	Superset	admin	1662622234352	\N	0
 \.
 
 
@@ -3458,6 +3408,8 @@ d6ebc1f0-d5e7-455f-bfdf-ea4c5bf9679e	5035e40d-7ef5-4b1a-97e0-28bfa3396f44
 18bb1321-2776-4d1d-97b7-e5e25628d249	38d778c6-6361-4eae-a04e-2c28f5acab7c
 504fe6c2-0752-4120-89fa-5f19262213c2	38d778c6-6361-4eae-a04e-2c28f5acab7c
 18bb1321-2776-4d1d-97b7-e5e25628d249	0cd1e99f-227a-4e01-a786-088b7c7f2232
+18bb1321-2776-4d1d-97b7-e5e25628d249	556af4cb-6c10-421e-80a3-1805558f6f10
+18bb1321-2776-4d1d-97b7-e5e25628d249	1deb9ac9-4470-467e-8354-2034d3e4af1d
 \.
 
 
@@ -5513,8 +5465,8 @@ ALTER TABLE ONLY public.identity_provider_config
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.4
--- Dumped by pg_dump version 14.4
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -7743,8 +7695,8 @@ ALTER TABLE ONLY public.vaults_beta
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.4
--- Dumped by pg_dump version 14.4
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -7764,3 +7716,4 @@ SET row_security = off;
 --
 -- PostgreSQL database cluster dump complete
 --
+

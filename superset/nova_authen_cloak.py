@@ -10,6 +10,21 @@ from httplib2 import Response
 
 from superset.security import SupersetSecurityManager
 
+KEY_GROUPS_MEMBERSHIPS = "groups_membership"
+
+
+def sync_role(roles, user, security_manager: SupersetSecurityManager):
+    user_roles = [role.name.lower() for role in list(security_manager.get_user_roles())]
+    if "admin" in user_roles:
+        return
+    roles_new = (
+        list(map(security_manager.add_role, roles)) if isinstance(roles, list) else None
+    )
+    if len(roles_new) == 0:
+        roles_new = []
+    user.roles = roles_new
+    security_manager.update_user(user)
+
 
 class AuthOIDCView(AuthOIDView):
     @expose("/login/", methods=["GET", "POST"])
@@ -29,9 +44,12 @@ class AuthOIDCView(AuthOIDView):
                     "last_name",
                 ]
             )
+            # Key groups_membership from client of keycloak
+            groups = oidc.user_getinfo([KEY_GROUPS_MEMBERSHIPS])
+            roles = groups.get(KEY_GROUPS_MEMBERSHIPS, [])
             info["username"] = info.get("preferred_username")
-            info["first_name"] = info.get("given_name")
-            info["last_name"] = info.get("family_name")
+            info["first_name"] = info.get("given_name", "")
+            info["last_name"] = info.get("family_name", "")
             user = sm.auth_user_oauth(info)
             if user is None:
                 user = sm.add_user(
@@ -41,6 +59,8 @@ class AuthOIDCView(AuthOIDView):
                     email=info.get("email"),
                     role=sm.find_role("Gamma"),
                 )
+            else:
+                sync_role(roles, user, sm)
             login_user(user, remember=False)
             return redirect(self.appbuilder.get_url_for_index)
 
