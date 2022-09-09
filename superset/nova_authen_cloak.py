@@ -21,7 +21,7 @@ def sync_role(roles, user, security_manager: SupersetSecurityManager):
         list(map(security_manager.add_role, roles)) if isinstance(roles, list) else None
     )
     if len(roles_new) == 0:
-        roles_new = []
+        roles_new = [security_manager.add_role("Public")]
     user.roles = roles_new
     security_manager.update_user(user)
 
