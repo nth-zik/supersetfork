@@ -17,15 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-#Make it simple
 
-Just run this script and enjoy
+# Nova SSO
 
+## Add keycloak to your /etc/host file
 ```
-sh ./run-dev.sh
+127.0.0.1   keycloak.localhost
 ```
-
-#Nova SSO
 You need run this service to authenticate
 
 ```
@@ -36,7 +34,14 @@ docker compose up -d
 This folder have sample database for PostgreSQL KeyCloak and Kong. If you want to setup by yourself please read this documentation
 [https://novaid.atlassian.net/wiki/spaces/NTGE/pages/44761121/SSO+Keycloak+Kong](https://novaid.atlassian.net/wiki/spaces/NTGE/pages/44761121/SSO+Keycloak+Kong)
 
-#Superset
+# Script run development mode
+
+Just run this script and enjoy
+
+```
+sh ./run-dev.sh
+```
+# Superset
 
 ## Setup Local Environment for Development
 

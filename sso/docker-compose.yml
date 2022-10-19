@@ -20,6 +20,25 @@ services:
       - postgresql:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:17.0.1
+    depends_on:
+      - postgresql
+    command: start-dev --db=postgres
+    container_name: keycloak-service
+    networks:
+      - proxy-net
+    ports:
+      - "8180:8080"
+    environment:
+      # KEYCLOAK_LOGLEVEL: DEBUG
+      # ROOT_LOGLEVEL: DEBUG
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_DB_URL: jdbc:postgresql://postgresql:5432/keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
   kong:
     build:
       context: ./
@@ -27,6 +46,7 @@ services:
     container_name: kong-service
     depends_on:
       - postgresql
+      - keycloak
     networks:
       - proxy-net
     ports:
@@ -51,25 +71,6 @@ services:
       # KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
       # KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
       # KONG_NGINX_HTTP_INCLUDE: /path/to/your/my-server.kong.conf
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:17.0.1
-    depends_on:
-      - postgresql
-    command: start-dev --db=postgres
-    container_name: keycloak-service
-    networks:
-      - proxy-net
-    ports:
-      - "8180:8080"
-    environment:
-      # KEYCLOAK_LOGLEVEL: DEBUG
-      # ROOT_LOGLEVEL: DEBUG
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
-      KC_DB_URL: jdbc:postgresql://postgresql:5432/keycloak
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
 
 networks:
   proxy-net:
