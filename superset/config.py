@@ -1309,6 +1309,7 @@ ADVANCED_DATA_TYPES: Dict[str, AdvancedDataType] = {
     "port": internet_port,
 }
 ENABLE_SCHEDULED_EMAIL_REPORTS = True
+SYNC_GROUP_FROM_KEYCLOAK = False
 
 
 # -------------------------------------------------------------------

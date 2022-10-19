@@ -8,6 +8,7 @@ from flask_login import login_user
 from flask_oidc import OpenIDConnect
 from httplib2 import Response
 
+from superset import is_feature_enabled
 from superset.security import SupersetSecurityManager
 
 KEY_GROUPS_MEMBERSHIPS = "groups_membership"
@@ -60,6 +61,9 @@ class AuthOIDCView(AuthOIDView):
                     role=sm.find_role("Gamma"),
                 )
             else:
+                if is_feature_enabled("SYNC_GROUP_FROM_KEYCLOAK"):
+                    sync_role(roles, user, sm)
+
                 sync_role(roles, user, sm)
             login_user(user, remember=False)
             return redirect(self.appbuilder.get_url_for_index)
